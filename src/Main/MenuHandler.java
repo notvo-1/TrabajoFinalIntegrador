@@ -61,7 +61,7 @@ public class MenuHandler {
      
       public void listarProductos() {
         try {
-            System.out.print("�Desea (1) listar todos o (2) buscar por nombre/marca? Ingrese opcion: ");
+            System.out.print("�Desea (1) listar todos o (2) buscar por nombre? Ingrese opcion: ");
             int subopcion = Integer.parseInt(scanner.nextLine());
 
             List<Producto> productos;
@@ -70,7 +70,7 @@ public class MenuHandler {
             } else if (subopcion == 2) {
                 System.out.print("Ingrese texto a buscar: ");
                 String filtro = scanner.nextLine().trim();
-                productos = productoService.buscarPorNombreOMarca(filtro);
+                productos = productoService.buscarPorNombre(filtro);
             } else {
                 System.out.println("Opcion invalida.");
                 return;
@@ -89,27 +89,10 @@ public class MenuHandler {
         }
     }
      
-      
-        /*
-      Permite buscar un producto por el valor del codigo de barras 
-      */
-       public Producto bucsarProductoPorCodigoBarras() {
-           System.out.print("Ingrese el codigo de barras del producto: ");
-           String cb = scanner.nextLine().trim();
-           Producto producto = null;
-           try{
-              int id_cb = codigoDeBarrasService.getIdPorValor(); 
-              producto = productoService.buscarPorCodigoBarras(id_cb);
-              
-           }catch(Exception e){
-              System.err.println("Error al buscar producto: " + e.getMessage());
-           }
-           return producto;
-       }      
-      
+            
        
        /*
-      Permite actualizar el precio y categoria del producto
+      Permite actualizar el precio del producto
       */
       
     public void actualizarProducto() {
@@ -132,18 +115,6 @@ public class MenuHandler {
                 }catch(NumberFormatException  e){
                     System.out.println("El precio ingresado no es valido");
                 }
-            }
-
-
-            System.out.print("Nueva categoria (actual: " + p.getIdCategoria() + ", Enter para mantener): ");
-            String inputCategoria = scanner.nextLine().trim();
-            try{
-                
-              int id_categoria = Integer.parseInt(inputCategoria);
-              p.setIdCategoria(id_categoria);
-              
-            }catch(IllegalArgumentException e){
-                    System.out.println(e.getMessage());
             }
             
             productoService.actualizar(p);

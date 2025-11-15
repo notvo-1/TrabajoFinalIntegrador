@@ -67,24 +67,10 @@ public class ProductoServiceImp implements GenericService<Producto> {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
-    public List<Producto> buscarPorNombreOMarca(String nombreOMarca) throws SQLException{
-         if (nombreOMarca == null || nombreOMarca.trim().isEmpty()) {
+    public List<Producto> buscarPorNombre(String nombre) throws SQLException{
+         if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre de búsqueda no puede estar vacío");
         }
-        return productoDAO.buscarPorNombreOMarca(nombreOMarca);
-    }
-
-    public Producto buscarPorCodigoBarras(String cb) throws SQLException{
-         if (cb == null || cb.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre de búsqueda no puede estar vacío");
-        }
-         return productoDAO.buscarPorCodigoBarras(cb);
-    }
-    
-    public void setCategoria(Producto p, String inputCategoria){
-         if (inputCategoria== null || inputCategoria.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre de búsqueda no puede estar vacío");
-        }
-    
+        return productoDAO.buscarPorNombre(nombre);
     }
 }
