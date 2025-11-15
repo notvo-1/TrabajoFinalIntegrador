@@ -149,10 +149,29 @@ private static final String SEARCH_BY_NAME_SQL =
             stmt.setInt(1, id);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
-                throw new SQLException("No se encontr� el producto con ID: " + id);
+                throw new SQLException("No se encontro el producto con ID: " + id);
             }
         }
     }
+    
+    public List<Producto> buscarPorNombre(String nombreOMarca) throws SQLException{
+        List<Producto> productos = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(SEARCH_BY_NAME_SQL)) {
+              stmt.setString(1, nombreOMarca);
+              
+              try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    productos.add(mapResultSetToProducto(rs));
+                }
+            }catch(SQLException e){
+                throw e;
+            }
+        }catch(SQLException e){
+            throw e;
+        }
+        return productos;
+    }
+    
     /**
      * Setea los parametros de un producto para un PreraedStatement.
      * Metodo aiziliar usado por Crear, crearTx y actualizar.
