@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * @author notvo
  */
 
-public class CodigoBarrasDao implements GenericDao<CodigoBarras> {
+public class CodigoBarrasDAO implements GenericDAO<CodigoBarras> {
 
     //PreparedStatement
     private static final String INSERT_SQL = "INSERT INTO codigo_barras (tipo_id, valor, fecha_asignacion, observaciones) VALUES (?, ?, ?, ?)";
@@ -41,7 +41,7 @@ public class CodigoBarrasDao implements GenericDao<CodigoBarras> {
             + "FROM codigo_barras "
             + "WHERE eliminado = FALSE AND valor LIKE ?";
 
-    public CodigoBarrasDao() {
+    public CodigoBarrasDAO() {
     }
 
     @Override
@@ -108,7 +108,7 @@ public class CodigoBarrasDao implements GenericDao<CodigoBarras> {
             stmt.setInt(1, id);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
-                throw new SQLException("No se encontró el Codigo de Barras con ID: " + id);
+                throw new SQLException("No se encontrï¿½ el Codigo de Barras con ID: " + id);
             }
         }
     }

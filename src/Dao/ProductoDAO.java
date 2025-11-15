@@ -15,7 +15,7 @@ import java.util.ArrayList;
  *
  * @author notvo
  */
-public class ProductoDao implements GenericDao<Producto> {
+public class ProductoDAO implements GenericDAO<Producto> {
 
     //PreparedStatement
     private static final String INSERT_SQL = "INSERT INTO productos (nombre_producto, marca_id, categoria_id, precio, peso, codigo_id) VALUES (?, ?, ?, ?, ?, ?)";
@@ -42,6 +42,20 @@ private static final String SEARCH_BY_NAME_SQL =
     "FROM productos " +
     "WHERE eliminado = FALSE AND nombre_producto LIKE ?";
 
+private static final String SEARCH_BY_NAME_OR_BRAND_SQL = 
+    "SELECT producto_id, nombre_producto, marca_id, categoria_id, " +
+    "precio, peso, codigo_id " +
+    "FROM productos p" +
+    "LEFT JOIN marcas m ON p.marca_id = m.marca_id" +
+    "WHERE eliminado = FALSE AND (p.nombre_producto LIKE \"%?%\" OR m.nombre_marca LIKE \"%?%\")";
+        
+    
+private static final String SELECT_BY_CB_SQL = 
+    "SELECT producto_id, nombre_producto, marca_id, categoria_id, " +
+    "precio, peso, codigo_id " +
+    "FROM productos p" +
+    "LEFT JOIN codigo_barras cb ON p.codigo_id = cb.codigo_id" +
+    "WHERE p.eliminado = FALSE AND cb.valor LIKE \"?\"";
 // voy a usar DAOs tontos
 //    //atributo y relacion con codigoBarraDao 
 //    private final CodigoBarrasDao codigoBarrasDao;
@@ -54,7 +68,7 @@ private static final String SEARCH_BY_NAME_SQL =
 //        this.codigoBarrasDao = codigoBarrasDao;
 //    }
 
-    public ProductoDao() {
+    public ProductoDAO() {
     }
 
     
@@ -133,9 +147,39 @@ private static final String SEARCH_BY_NAME_SQL =
             stmt.setInt(1, id);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
-                throw new SQLException("No se encontró el producto con ID: " + id);
+                throw new SQLException("No se encontrï¿½ el producto con ID: " + id);
             }
         }
+    }
+    
+    public List<Producto> buscarPorNombreOMarca(String nombreOMarca) throws SQLException{
+        List<Producto> productos = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(SEARCH_BY_NAME_OR_BRAND_SQL)) {
+              stmt.setString(1, nombreOMarca);
+              stmt.setString(2, nombreOMarca);
+              
+              try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    productos.add(mapResultSetToProducto(rs));
+                }
+            }
+        }
+        return productos;
+    }
+    
+    
+     public Producto buscarPorCodigoBarras(String cb) throws SQLException {
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(SELECT_BY_CB_SQL)) {
+
+            stmt.setString(1, cb);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToProducto(rs);
+                }
+            }
+        }
+        return null;
     }
     /**
      * Setea los parametros de un producto para un PreraedStatement.

@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author notvo
  */
-public interface GenericDao<T> {
+public interface GenericDAO<T> {
     
     
     public void crear(T entidad)throws SQLException;

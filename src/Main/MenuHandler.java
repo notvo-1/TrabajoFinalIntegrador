@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class MenuHandler {
      /**
        Scanner compartido para leer entrada del usuario.
-       Inyectado desde AppMenu para evitar múltiples Scanners de System.in.
+       Inyectado desde AppMenu para evitar mï¿½ltiples Scanners de System.in.
      */
     private final Scanner scanner;
     
@@ -59,7 +59,7 @@ public class MenuHandler {
      
       public void listarProductos() {
         try {
-            System.out.print("¿Desea (1) listar todos o (2) buscar por nombre/marca? Ingrese opcion: ");
+            System.out.print("ï¿½Desea (1) listar todos o (2) buscar por nombre/marca? Ingrese opcion: ");
             int subopcion = Integer.parseInt(scanner.nextLine());
 
             List<Producto> productos;
@@ -103,7 +103,9 @@ public class MenuHandler {
            }
            return producto;
        }      
-      /*
+      
+       
+       /*
       Permite actualizar el precio y categoria del producto
       */
       
@@ -125,22 +127,25 @@ public class MenuHandler {
                     double precio = Double.parseDouble(inputPrecio);
                     p.setPrecio(precio);        
                 }catch(NumberFormatException  e){
-                    System.out.println("El precio ingresado no es válido");
+                    System.out.println("El precio ingresado no es valido");
                 }
             }
 
 
             System.out.print("Nueva categoria (actual: " + p.getIdCategoria() + ", Enter para mantener): ");
             String inputCategoria = scanner.nextLine().trim();
-            if (!inputCategoria.isEmpty()) {
-                p.setCategoria(inputCategoria);
+            try{
+                
+              productoService.setCategoria(p ,inputCategoria); 
+              
+            }catch(IllegalArgumentException e){
+                    System.out.println(e.getMessage());
             }
-
             
             productoService.actualizar(p);
-            System.out.println("Persona actualizada exitosamente.");
+            System.out.println("producto actualizada exitosamente.");
         } catch (Exception e) {
-            System.err.println("Error al actualizar persona: " + e.getMessage());
+            System.err.println("Error al actualizar producto: " + e.getMessage());
         }
     }
     
@@ -186,7 +191,34 @@ public class MenuHandler {
         }
     }
      
+  /*
+    Actualizar categoria de CodigoBarra    
+    */  
+     public void actualizarCodigoBarra() {
+        try {
+            System.out.print("ID del codigo de barra a actualizar: ");
+            int id = Integer.parseInt(scanner.nextLine().trim());
+            CodigoBarras cb = productoService.getCodigoBarras().getById(id);
 
+            if (cb == null) {
+                System.out.println("Codigo de barras no encontrado.");
+                return;
+            }
+
+            System.out.print("Nuevas observaciones(actual: " + cb.getObservaciones()+ ", Enter para mantener): ");
+            String observaciones = scanner.nextLine().trim();
+            if (!observaciones.isEmpty()) {
+                cb.setObservaciones(observaciones);
+            }
+            
+            productoService.getCodigoBarras().actualizar(cb);
+            System.out.println("Codigo de barras actualizado exitosamente.");
+        } catch (Exception e) {
+            System.err.println("Error al actualizar el codigo de barras: " + e.getMessage());
+        }
+    }
+    
+    
 }
 
 

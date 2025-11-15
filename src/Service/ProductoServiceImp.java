@@ -4,7 +4,7 @@
  */
 package Service;
 
-import DAO.ProductoDao;
+import DAO.ProductoDAO;
 import Models.Producto;
 import java.sql.SQLException;
 import java.util.List;
@@ -15,11 +15,11 @@ import java.util.List;
  */
 public class ProductoServiceImp implements GenericService<Producto> {
 
-    private final ProductoDao productoDAO; // mediante inyeccion 
+    private final ProductoDAO productoDAO; // mediante inyeccion 
 
     private final CodigoBarrasServiceImp codigoBarrasSeriviceImp;
 
-    public ProductoServiceImp(ProductoDao productoDAO, CodigoBarrasServiceImp codigoBarrasSeriviceImp) {
+    public ProductoServiceImp(ProductoDAO productoDAO, CodigoBarrasServiceImp codigoBarrasSeriviceImp) {
         if (productoDAO == null) {
             throw new IllegalArgumentException("ProductoDao no puede ser null");
         }
@@ -68,10 +68,23 @@ public class ProductoServiceImp implements GenericService<Producto> {
     }
     
     public List<Producto> buscarPorNombreOMarca(String nombreOMarca) throws SQLException{
-        throw new UnsupportedOperationException("Not supported yet.") ;
+         if (nombreOMarca == null || nombreOMarca.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de búsqueda no puede estar vacío");
+        }
+        return productoDAO.buscarPorNombreOMarca(nombreOMarca);
     }
 
     public Producto buscarPorCodigoBarras(String cb) throws SQLException{
-           throw new UnsupportedOperationException("Not supported yet.");
+         if (cb == null || cb.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de búsqueda no puede estar vacío");
+        }
+         return productoDAO.buscarPorCodigoBarras(cb);
+    }
+    
+    public void setCategoria(Producto p, String inputCategoria){
+         if (inputCategoria== null || inputCategoria.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de búsqueda no puede estar vacío");
+        }
+    
     }
 }
