@@ -16,7 +16,6 @@ import java.util.ArrayList;
  *
  * @author notvo
  */
-
 public class CodigoBarrasDAO implements GenericDAO<CodigoBarras> {
 
     //PreparedStatement
@@ -114,39 +113,49 @@ public class CodigoBarrasDAO implements GenericDAO<CodigoBarras> {
     }
 
     private void setCodigoBarrasParameters(PreparedStatement stmt, CodigoBarras codigobarras) throws SQLException {
-        stmt.setInt(1,codigobarras.getTipoId()); // tipo codigo id
+        stmt.setInt(1, codigobarras.getTipoId()); // tipo codigo id
         stmt.setString(2, codigobarras.getValor()); // valor
         LocalDate fecha = codigobarras.getFechaAsignacion(); // fecha con conversion de localdate a date
-        java.sql.Date sqlfecha = (fecha != null) ? java.sql.Date.valueOf(fecha): null;
+        java.sql.Date sqlfecha = (fecha != null) ? java.sql.Date.valueOf(fecha) : null;
         stmt.setDate(3, sqlfecha);
         stmt.setString(4, codigobarras.getObservaciones()); // obervaciones
-        
+
     }
-    
 
     private void setGeneratedId(PreparedStatement stmt, CodigoBarras codigobarras) throws SQLException {
-        try(ResultSet generateKeys = stmt.getGeneratedKeys()){
+        try (ResultSet generateKeys = stmt.getGeneratedKeys()) {
             if (generateKeys.next()) {
                 codigobarras.setId(generateKeys.getInt(1));
-            }else{
+            } else {
                 throw new SQLException("La insercion de la persona fallo, no se obtudo el ID generado.");
             }
         }
     }
 
-    private CodigoBarras mapResultSetToCodigoBarras(ResultSet rs) throws SQLException {
-    CodigoBarras codigo = new CodigoBarras();
-    codigo.setId(rs.getInt("codigo_id"));
-    codigo.setTipoId(rs.getInt("tipo_id"));
-    codigo.setValor(rs.getString("valor"));
-    
-    java.sql.Date sqlDate = rs.getDate("fecha_asignacion");
-    codigo.setFechaAsignacion(sqlDate != null ? sqlDate.toLocalDate() : null);
-    
-    codigo.setObservaciones(rs.getString("observaciones"));
-    return codigo;
+    public boolean existe(String valor) throws SQLException {
+        String sql = "SELECT 1 FROM codigo_barras WHERE valor = ? LIMIT 1";
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, valor);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        }
+
     }
 
+    private CodigoBarras mapResultSetToCodigoBarras(ResultSet rs) throws SQLException {
+        CodigoBarras codigo = new CodigoBarras();
+        codigo.setId(rs.getInt("codigo_id"));
+        codigo.setTipoId(rs.getInt("tipo_id"));
+        codigo.setValor(rs.getString("valor"));
 
+        java.sql.Date sqlDate = rs.getDate("fecha_asignacion");
+        codigo.setFechaAsignacion(sqlDate != null ? sqlDate.toLocalDate() : null);
+
+        codigo.setObservaciones(rs.getString("observaciones"));
+        return codigo;
+    }
 
 }

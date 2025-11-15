@@ -4,9 +4,11 @@
  */
 package Service;
 
+import Config.DatabaseConnection;
 import DAO.ProductoDAO;
+import Models.CodigoBarras;
 import Models.Producto;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 /**
@@ -31,39 +33,91 @@ public class ProductoServiceImp implements GenericService<Producto> {
         this.codigoBarrasSeriviceImp = codigoBarrasSeriviceImp;
     }
 
-    public CodigoBarrasServiceImp getCodigoBarras(){
-        return this.codigoBarrasSeriviceImp;
+    public void crearProductoConCodigo(Producto producto, CodigoBarras codigoBarras)
+            throws SQLException, IllegalArgumentException {
+        validateProducto(producto);
+
+        //transaccion
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try {
+                if (codigoBarras != null) {
+                    codigoBarrasSeriviceImp.validate(codigoBarras); // validator
+                    codigoBarrasSeriviceImp.insertarTx(codigoBarras, conn); // insert con transaccion en codigobarrasserivceimp
+                    producto.setIdCodigo(codigoBarras.getId());
+                }
+
+                insertarTx(producto, conn);
+                conn.commit();
+
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            }
+        }
     }
     
+    public List<Producto> buscarPorNombre(String nombre) throws SQLException{
+         if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de búsqueda no puede estar vacío");
+        }
+        return productoDAO.buscarPorNombre(nombre);
+    }
+
     @Override
-    public void insertar(Producto producto) throws SQLException, IllegalArgumentException {
-        validateProducto(producto);
-        
+    public void insertarTx(Producto producto, Connection conn) throws SQLException {
+        productoDAO.crearTx(producto, conn);
+    }
+
+    // no implementado y quizas no lo implemente
+    @Override
+    public void insertar(Producto producto) throws SQLException {
+        throw new UnsupportedOperationException("Use crearProductoConCodigo()");
     }
 
     @Override
     public void actualizar(Producto producto) throws SQLException {
+        validateProducto(producto);
+        if (producto.getId() <= 0) {
+            throw new IllegalArgumentException("ID inv�lido para actualizar");
+        } // esto podria estar en un metodo
         if (producto.getId() <= 0) {
             throw new IllegalArgumentException("El ID del producto debe ser mayor a 0 para actualizar");
         }
+        productoDAO.actualizar(producto);
     }
 
     @Override
     public void eliminar(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (id <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor a 0");
+        }
+        productoDAO.eliminar(id);
     }
 
     @Override
     public Producto getById(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (id <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor a 0");
+        }
+        return productoDAO.leer(id);
     }
 
     @Override
     public List<Producto> getAll() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return productoDAO.leertodos();
     }
 
+    // mas validaciones necesarias, con estas andan bien por ahora
+    // revisar bien en la base de datos la desicion de que validar
     private void validateProducto(Producto producto) {
+        if (producto == null) {
+            throw new IllegalArgumentException("Producto no puede ser null");
+        }
+        if (producto.getPrecio() <= 0) {
+            throw new IllegalArgumentException("Precio debe ser mayor a 0");
+        }
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
@@ -73,4 +127,5 @@ public class ProductoServiceImp implements GenericService<Producto> {
         }
         return productoDAO.buscarPorNombre(nombre);
     }
+
 }

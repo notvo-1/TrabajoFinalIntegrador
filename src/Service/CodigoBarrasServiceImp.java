@@ -4,7 +4,9 @@
  */
 package Service;
 
+import DAO.CodigoBarrasDAO;
 import Models.CodigoBarras;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -12,37 +14,87 @@ import java.util.List;
  *
  * @author notvo
  */
-public class CodigoBarrasServiceImp implements GenericService<CodigoBarras>{
-    
-    
-    
-    
-    
-    
+public class CodigoBarrasServiceImp implements GenericService<CodigoBarras> {
 
-    @Override
-    public void insertar(CodigoBarras entidad) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private final CodigoBarras codigoBarras;
+    private final CodigoBarrasDAO codigoBarrasDAO;
+
+    public CodigoBarrasServiceImp(CodigoBarras codigoBarras, CodigoBarrasDAO codigoBarrasDAO) {
+        if (codigoBarras == null) {
+            throw new IllegalArgumentException("ProductoDao no puede ser null");
+        }
+        if (codigoBarrasDAO == null) {
+            throw new IllegalArgumentException("CodigoBarraServiceImp no puede ser null");
+        }
+        this.codigoBarras = codigoBarras;
+        this.codigoBarrasDAO = codigoBarrasDAO;
     }
 
     @Override
-    public void actualizar(CodigoBarras entidad) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void insertar(CodigoBarras codigoBarras) throws SQLException {
+        throw new UnsupportedOperationException("Usar insertarTx");
+    }
+
+    @Override
+    public void insertarTx(CodigoBarras codigoBarras, Connection conn) throws SQLException {
+        codigoBarrasDAO.crearTx(codigoBarras, conn);
+    }
+
+    @Override
+    public void actualizar(CodigoBarras codigoBarras) throws SQLException {
+        validate(codigoBarras);
+        if (codigoBarras.getId() <= 0) {
+            throw new IllegalArgumentException("El ID del codigobarra debe ser mayor a 0 para actualizar");
+        }
+        codigoBarrasDAO.actualizar(codigoBarras);
     }
 
     @Override
     public void eliminar(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (id <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor a 0");
+        }
+        codigoBarrasDAO.eliminar(id);
     }
 
     @Override
     public CodigoBarras getById(int id) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (id <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor a 0");
+        }
+        return codigoBarrasDAO.leer(id);
     }
 
     @Override
     public List<CodigoBarras> getAll() throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return codigoBarrasDAO.leertodos();
     }
-    
+
+    void validate(CodigoBarras codigoBarras) throws SQLException {
+
+        if (codigoBarras == null) {
+            throw new IllegalArgumentException("El c�digo de barras no puede ser null");
+        }
+
+        if (codigoBarras.getId() <= 0) {
+            throw new IllegalArgumentException("El id del codigobarras debe ser positivo");
+
+        }
+
+        String valor = codigoBarras.getValor();
+
+        if (valor == null || valor.isBlank()) {
+            throw new IllegalArgumentException("El n�mero de c�digo de barras es obligatorio");
+        }
+
+        if (valor.length() < 8) {   // largo X
+            throw new IllegalArgumentException("El c�digo de barras debe tener al menos 8 d�gitos");
+        }
+
+        // VALIDACI�N ONLINE de valor del codigo de barras
+        if (codigoBarrasDAO.existe(valor)) {
+            throw new SQLException("El c�digo de barras ya existe en el sistema");
+        }
+    }
+
 }

@@ -4,7 +4,7 @@
  */
 package Service;
 
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 /**
  *
@@ -13,6 +13,8 @@ import java.util.List;
 public interface GenericService<T> {
 
     void insertar(T entidad) throws SQLException;
+    
+    void insertarTx(T entidad, Connection conn) throws SQLException;
 
     void actualizar(T entidad) throws SQLException;
 
