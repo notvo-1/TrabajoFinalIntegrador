@@ -57,23 +57,6 @@ private static final String SEARCH_BY_NAME_SQL =
     public ProductoDAO() {
     }
 
-    public List<Producto> buscarPorNombre(String nombreOMarca) throws SQLException{
-        List<Producto> productos = new ArrayList<>();
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(SEARCH_BY_NAME_SQL)) {
-              stmt.setString(1, nombreOMarca);
-              
-              try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    productos.add(mapResultSetToProducto(rs));
-                }
-            }catch(SQLException e){
-                throw e;
-            }
-        }catch(SQLException e){
-            throw e;
-        }
-        return productos;
-    }
     // metodos de genericDao para manejar los inserts, update, busquedas y deletes.
     // respecto a los errores se los maneja directamente en el service
     @Override

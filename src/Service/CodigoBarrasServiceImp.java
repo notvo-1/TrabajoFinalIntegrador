@@ -21,15 +21,22 @@ public class CodigoBarrasServiceImp implements GenericService<CodigoBarras> {
 
     public CodigoBarrasServiceImp(CodigoBarras codigoBarras, CodigoBarrasDAO codigoBarrasDAO) {
         if (codigoBarras == null) {
-            throw new IllegalArgumentException("ProductoDao no puede ser null");
+            throw new IllegalArgumentException("codigoBarras no puede ser null");
         }
         if (codigoBarrasDAO == null) {
-            throw new IllegalArgumentException("CodigoBarraServiceImp no puede ser null");
+            throw new IllegalArgumentException("codigoBarrasDAO no puede ser null");
         }
         this.codigoBarras = codigoBarras;
         this.codigoBarrasDAO = codigoBarrasDAO;
     }
 
+    public CodigoBarrasServiceImp(CodigoBarrasDAO codigoBarrasDAO) {
+        if (codigoBarrasDAO == null) {
+            throw new IllegalArgumentException("codigoBarrasDAO no puede ser null");
+        }
+        this.codigoBarrasDAO = codigoBarrasDAO;
+    }
+    
     @Override
     public void insertar(CodigoBarras codigoBarras) throws SQLException {
         throw new UnsupportedOperationException("Usar insertarTx");
