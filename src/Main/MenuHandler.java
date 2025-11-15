@@ -87,8 +87,22 @@ public class MenuHandler {
         }
     }
      
-   
       
+        /*
+      Permite buscar un producto por su codigo de barras 
+      */
+       public Producto bucsarProductoPorCodigoBarras() {
+           System.out.print("Ingrese el codigo de barras del producto: ");
+           String cb = scanner.nextLine().trim();
+           Producto producto = null;
+           try{
+              producto = productoService.buscarPorCodigoBarras(cb);
+              
+           }catch(Exception e){
+              System.err.println("Error al buscar producto: " + e.getMessage());
+           }
+           return producto;
+       }      
       /*
       Permite actualizar el precio y categoria del producto
       */
