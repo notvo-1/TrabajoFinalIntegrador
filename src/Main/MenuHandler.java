@@ -1,10 +1,8 @@
 package Main;
 
-import Models.Categoria;
-import Models.CodigoBarras;
 import Models.Producto;
-import Service.CategoriaServiceImp;
 import Service.ProductoServiceImp;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -61,28 +59,19 @@ public class MenuHandler {
      
       public void listarProductos() {
         try {
-            System.out.print("�Desea (1) listar todos o (2) buscar por nombre? Ingrese opcion: ");
-            int subopcion = Integer.parseInt(scanner.nextLine());
 
             List<Producto> productos;
-            if (subopcion == 1) {
-                productos = productoService.getAll();
-            } else if (subopcion == 2) {
-                System.out.print("Ingrese texto a buscar: ");
-                String filtro = scanner.nextLine().trim();
-                productos = productoService.buscarPorNombre(filtro);
-            } else {
-                System.out.println("Opcion invalida.");
-                return;
-            }
-
+            productos = productoService.getAll();
+           
             if (productos.isEmpty()) {
                 System.out.println("No se encontraron productos.");
-                return;
-            }
+                
+            }else{
+            
+                for (Producto p : productos) {
+                    System.out.println(p);
+                }
 
-            for (Producto p : productos) {
-                System.out.println(p);
             }
         } catch (Exception e) {
             System.err.println("Error al listar productos: " + e.getMessage());
@@ -137,6 +126,28 @@ public class MenuHandler {
         }
     }
         
+        
+        public void buscarPorNombre(){
+            List<Producto> productos;
+            try{
+                System.out.print("Ingrese texto a buscar: ");
+                String nombre = scanner.nextLine().trim();
+                productos = productoService.buscarPorNombre(nombre);
+                
+                if (!productos.isEmpty()) {
+                    for (Producto p : productos) {
+                        System.out.println(p);
+                    }
+                }else{
+                    System.out.println("No se encontraron productos con ese nombre.");
+                }
+            }catch(SQLException e) {
+                System.out.println("Error de base de datos al buscar productos." + e.getMessage());
+            }catch(Exception ex){
+                System.out.println("Error al realizar la búsqueda" + ex.getMessage());
+            }
+            
+        }
         
         
     /*
