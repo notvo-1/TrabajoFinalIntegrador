@@ -58,12 +58,7 @@ public class ProductoServiceImp implements GenericService<Producto> {
         }
     }
     
-    public List<Producto> buscarPorNombre(String nombre) throws SQLException{
-         if (nombre == null || nombre.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre de búsqueda no puede estar vacío");
-        }
-        return productoDAO.buscarPorNombre(nombre);
-    }
+
 
     @Override
     public void insertarTx(Producto producto, Connection conn) throws SQLException {

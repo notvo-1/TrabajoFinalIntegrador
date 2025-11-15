@@ -2,6 +2,7 @@ package Main;
 
 import DAO.CodigoBarrasDAO;
 import DAO.ProductoDAO;
+import Models.CodigoBarras;
 import Service.CodigoBarrasServiceImp;
 import Service.ProductoServiceImp;
 import java.util.Scanner;
@@ -141,7 +142,7 @@ public class AppMenu {
     private ProductoServiceImp createProductoService() {
         CodigoBarrasDAO codigoBarrasDAO = new CodigoBarrasDAO();
         ProductoDAO productoDAO = new ProductoDAO();
-        CodigoBarrasServiceImp codigoBarrasService = new CodigoBarrasServiceImp();
+        CodigoBarrasServiceImp codigoBarrasService = new CodigoBarrasServiceImp(codigoBarrasDAO);
         return new ProductoServiceImp(productoDAO, codigoBarrasService);
     }
 }
