@@ -142,6 +142,7 @@ public class MenuHandler {
                     }
                 }else{
                     System.out.println("No se encontraron productos con ese nombre.");
+                     System.out.println("Productos es: " + productos);
                 }
             }catch(SQLException e) {
                 System.out.println("Error de base de datos al buscar productos." + e.getMessage());

@@ -11,7 +11,7 @@ public class MenuDisplay {
         System.out.println("4. Eliminar Producto (Baja Lógica)");
         
         System.out.println("--- Búsquedas ---");
-        System.out.println("5. Buscar Producto por Valor de Código de Barras (Búsqueda especial)"); 
+        System.out.println("5. Buscar Producto por nombre (Búsqueda especial)"); 
         // Esta es la búsqueda por campo relevante.
         
         System.out.println("0. Salir");

@@ -118,7 +118,7 @@ private static final String SEARCH_BY_NAME_SQL =
         try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(UPDATE_SQL)) {
             setProductoParameters(stmt, producto);
             stmt.setInt(7, producto.getId());
-
+            System.out.println(stmt);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
                 throw new SQLException("No se pudo actualizar el producto con ID: " + producto.getId());

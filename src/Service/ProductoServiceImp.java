@@ -75,7 +75,7 @@ public class ProductoServiceImp implements GenericService<Producto> {
     public void actualizar(Producto producto) throws SQLException {
         validateProducto(producto);
         if (producto.getId() <= 0) {
-            throw new IllegalArgumentException("ID inv�lido para actualizar");
+            throw new IllegalArgumentException("ID invalido para actualizar");
         } // esto podria estar en un metodo
         if (producto.getId() <= 0) {
             throw new IllegalArgumentException("El ID del producto debe ser mayor a 0 para actualizar");

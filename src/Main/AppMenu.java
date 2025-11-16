@@ -58,7 +58,11 @@ public class AppMenu {
         this.running = true;
     }
     
-    
+         
+    public static void main(String[] args) {
+        AppMenu app = new AppMenu();
+        app.run();
+    }
     
         /**
      * Loop principal del menú.
