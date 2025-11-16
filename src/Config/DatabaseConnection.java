@@ -17,7 +17,7 @@ public final class DatabaseConnection {
     /**
      * URL de conexion JDBC. Configurable via -Ddb.url
      */
-    private static final String URL = System.getProperty("db.url", "jdbc:mysql://localhost:3306/gestion_comercio");
+    private static final String URL = System.getProperty("db.url", "jdbc:mysql://localhost:3306/gestion_comercio2");
 
     /**
      * Usuario de la base de datos. Configurable via -Ddb.user

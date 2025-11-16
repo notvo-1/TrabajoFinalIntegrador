@@ -113,7 +113,7 @@ public class ProductoServiceImp implements GenericService<Producto> {
         if (producto.getPrecio() <= 0) {
             throw new IllegalArgumentException("Precio debe ser mayor a 0");
         }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
     }
     
     public List<Producto> buscarPorNombre(String nombre) throws SQLException{

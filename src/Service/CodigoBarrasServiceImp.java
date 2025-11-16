@@ -16,19 +16,19 @@ import java.util.List;
  */
 public class CodigoBarrasServiceImp implements GenericService<CodigoBarras> {
 
-    private final CodigoBarras codigoBarras;
+//    private final CodigoBarras codigoBarras;
     private final CodigoBarrasDAO codigoBarrasDAO;
 
-    public CodigoBarrasServiceImp(CodigoBarras codigoBarras, CodigoBarrasDAO codigoBarrasDAO) {
-        if (codigoBarras == null) {
-            throw new IllegalArgumentException("codigoBarras no puede ser null");
-        }
-        if (codigoBarrasDAO == null) {
-            throw new IllegalArgumentException("codigoBarrasDAO no puede ser null");
-        }
-        this.codigoBarras = codigoBarras;
-        this.codigoBarrasDAO = codigoBarrasDAO;
-    }
+//    public CodigoBarrasServiceImp(CodigoBarras codigoBarras, CodigoBarrasDAO codigoBarrasDAO) {
+//        if (codigoBarras == null) {
+//            throw new IllegalArgumentException("codigoBarras no puede ser null");
+//        }
+//        if (codigoBarrasDAO == null) {
+//            throw new IllegalArgumentException("codigoBarrasDAO no puede ser null");
+//        }
+//        this.codigoBarras = codigoBarras;
+//        this.codigoBarrasDAO = codigoBarrasDAO;
+//    }
 
     public CodigoBarrasServiceImp(CodigoBarrasDAO codigoBarrasDAO) {
         if (codigoBarrasDAO == null) {
@@ -83,7 +83,7 @@ public class CodigoBarrasServiceImp implements GenericService<CodigoBarras> {
             throw new IllegalArgumentException("El c�digo de barras no puede ser null");
         }
 
-        if (codigoBarras.getId() <= 0) {
+        if (codigoBarras.getId() < 0) {
             throw new IllegalArgumentException("El id del codigobarras debe ser positivo");
 
         }
