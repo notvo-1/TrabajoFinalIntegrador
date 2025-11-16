@@ -15,6 +15,14 @@ public class CodigoBarras extends Base {
         this.observaciones = observaciones;
         this.tipoId = tipoId;
     }
+    
+        public CodigoBarras(String valor, int tipoId) {
+        super();
+        this.valor = valor;
+        this.fechaAsignacion = LocalDate.now();
+        this.observaciones = "";
+        this.tipoId = tipoId;
+    }
 
     public int getTipoId() {
         return tipoId;

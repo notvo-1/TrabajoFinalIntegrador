@@ -77,10 +77,10 @@ public class CodigoBarrasServiceImp implements GenericService<CodigoBarras> {
         return codigoBarrasDAO.leertodos();
     }
 
-    void validate(CodigoBarras codigoBarras) throws SQLException {
+    public void validate(CodigoBarras codigoBarras) throws SQLException {
 
         if (codigoBarras == null) {
-            throw new IllegalArgumentException("El c�digo de barras no puede ser null");
+            throw new IllegalArgumentException("El codigo de barras no puede ser null");
         }
 
         if (codigoBarras.getId() < 0) {
@@ -91,16 +91,16 @@ public class CodigoBarrasServiceImp implements GenericService<CodigoBarras> {
         String valor = codigoBarras.getValor();
 
         if (valor == null || valor.isBlank()) {
-            throw new IllegalArgumentException("El n�mero de c�digo de barras es obligatorio");
+            throw new IllegalArgumentException("El numero de codigo de barras es obligatorio");
         }
 
         if (valor.length() < 8) {   // largo X
-            throw new IllegalArgumentException("El c�digo de barras debe tener al menos 8 d�gitos");
+            throw new IllegalArgumentException("El codigo de barras debe tener al menos 8 digitos");
         }
 
-        // VALIDACI�N ONLINE de valor del codigo de barras
+        // VALIDACION ONLINE de valor del codigo de barras
         if (codigoBarrasDAO.existe(valor)) {
-            throw new SQLException("El c�digo de barras ya existe en el sistema");
+            throw new SQLException("El codigo de barras ya existe en el sistema");
         }
     }
 
