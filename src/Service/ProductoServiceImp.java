@@ -53,7 +53,13 @@ public class ProductoServiceImp implements GenericService<Producto> {
                 conn.setAutoCommit(true);
 
             } catch (SQLException e) {
+                System.err.println("Ocurrio un SQLException. Se hace rollback");
                 conn.rollback();
+                throw e;
+
+            } catch (Exception e) {
+                System.err.println("Ocurrio un error no-SQL. Se hace rollback");
+                conn.rollback(); 
                 throw e;
             }
         }

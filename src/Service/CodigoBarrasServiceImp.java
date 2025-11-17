@@ -19,16 +19,6 @@ public class CodigoBarrasServiceImp implements GenericService<CodigoBarras> {
     //private final CodigoBarras codigoBarras;
     private final CodigoBarrasDAO codigoBarrasDAO;
 
-    public CodigoBarrasServiceImp(CodigoBarras codigoBarras, CodigoBarrasDAO codigoBarrasDAO) {
-        if (codigoBarras == null) {
-            throw new IllegalArgumentException("codigoBarras no puede ser null");
-        }
-        if (codigoBarrasDAO == null) {
-            throw new IllegalArgumentException("codigoBarrasDAO no puede ser null");
-        }
-      //  this.codigoBarras = codigoBarras;
-        this.codigoBarrasDAO = codigoBarrasDAO;
-    }
 
     public CodigoBarrasServiceImp(CodigoBarrasDAO codigoBarrasDAO) {
         if (codigoBarrasDAO == null) {
