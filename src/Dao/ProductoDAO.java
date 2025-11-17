@@ -28,7 +28,7 @@ public class ProductoDAO implements GenericDAO<Producto> {
     private static final String SELECT_BY_ID_SQL
             = "SELECT p.producto_id, p.nombre_producto, p.marca_id, p.categoria_id, "
             + "p.precio, p.peso, "
-            + "cb.codigo_id AS cb_id, cb.valor, cb.tipo_id "
+            + "cb.codigo_id, cb.valor, cb.tipo_id "
             +"FROM productos p "
             + "LEFT JOIN codigo_barras cb ON p.codigo_id = cb.codigo_id "
             + "WHERE p.producto_id = ? AND p.eliminado = FALSE";

@@ -3,6 +3,7 @@ package Models;
 import java.time.LocalDate;
 
 public class CodigoBarras extends Base {
+
     private String valor;
     private LocalDate fechaAsignacion;
     private String observaciones;
@@ -15,8 +16,8 @@ public class CodigoBarras extends Base {
         this.observaciones = observaciones;
         this.tipoId = tipoId;
     }
-    
-        public CodigoBarras(String valor, int tipoId) {
+
+    public CodigoBarras(String valor, int tipoId) {
         super();
         this.valor = valor;
         this.fechaAsignacion = LocalDate.now();
@@ -43,8 +44,8 @@ public class CodigoBarras extends Base {
     public void setTipoId(int tipoId) {
         this.tipoId = tipoId;
     }
-    
-    public CodigoBarras(){
+
+    public CodigoBarras() {
         super();
     }
 
@@ -62,11 +63,18 @@ public class CodigoBarras extends Base {
 
     @Override
     public String toString() {
-        return "CodigoBarras{" + "valor=" + valor + ", fechaAsignacion=" + fechaAsignacion + ", observaciones=" + observaciones + ", tipoId=" + tipoId + '}';
+        return String.format(
+                "%-12s: %s%n"
+                + "%-12s: %s%n"
+                + "%-12s: %s%n"
+                + "%-12s: %s%n"
+                + "%-12s: %s",
+                "Id Codigo", getId(),
+                "Valor", valor,
+                "Fecha", fechaAsignacion,
+                "Observaciones", observaciones,
+                "Tipo", TipoCodigoBarras.getTipo(tipoId)
+        );
     }
 
-
-    
-    
-    
 }

@@ -92,10 +92,25 @@ public class Producto extends Base {
      */
 
     @Override
-    public String toString() {
-        return "Producto{" + "nombre=" + nombre + ", precio=" + precio + ", peso=" + peso + ", idCategoria=" + idCategoria + ", idMarca=" + idMarca + ", codigoBarras=" + codigoBarras + '}';
-    }
-
+public String toString() {
+    return String.format(
+        "%-12s: %s%n" +
+        "%-12s: %s%n" +
+        "%-12s: $%.2f%n" + 
+        "%-12s: %.2fg%n" +
+        "%-12s: %s%n" +
+        "%-12s: %s%n" +
+        "%-12s\n" + 
+        "%s",
+        "Id Producto", getId(),
+        "Producto", nombre,
+        "Precio", precio,
+        "Peso", peso, 
+        "Categoria", Categoria.getCategoria(idCategoria),
+        "Marca", Marca.getMarca(idMarca),
+        "Codigo", codigoBarras
+    );
+}
 
 
 

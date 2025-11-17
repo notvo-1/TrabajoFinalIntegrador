@@ -36,6 +36,15 @@ public enum Categoria {
         }
         throw new IllegalArgumentException("ID de categoria no válido: " + id);
     }
+    
+        public static String getCategoria(int id) {
+        for (Categoria cat : values()) {
+            if (cat.id == id) {
+                return cat.getNombre();
+            }
+        }
+        throw new IllegalArgumentException("ID de categoria no válido: " + id);
+    }
 
     public static void mostrarOpciones() {
         System.out.println("Categorias disponibles:");

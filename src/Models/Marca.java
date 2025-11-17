@@ -38,6 +38,15 @@ public enum Marca {
         return nombre;
     }
 
+    public static String getMarca(int id) {
+        for (Marca marca : values()) {
+            if (marca.id == id) {
+                return marca.getNombre();
+            }
+        }
+        throw new IllegalArgumentException("ID de marca no válido: " + id);
+    }
+
     public static Marca buscarPorId(int id) {
         for (Marca marca : values()) {
             if (marca.id == id) {

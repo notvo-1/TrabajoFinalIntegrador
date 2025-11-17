@@ -29,6 +29,15 @@ public enum TipoCodigoBarras {
         return nombre;
     }
 
+    public static String getTipo(int id) {
+        for (TipoCodigoBarras tipo : values()) {
+            if (tipo.id == id) {
+                return tipo.getNombre();
+            }
+        }
+        throw new IllegalArgumentException("ID de tipo de código de barras no válido: " + id);
+    }
+
     public static TipoCodigoBarras buscarPorId(int id) {
         for (TipoCodigoBarras tipo : values()) {
             if (tipo.id == id) {
@@ -38,13 +47,11 @@ public enum TipoCodigoBarras {
         throw new IllegalArgumentException("ID de tipo de código de barras no válido: " + id);
     }
 
-    
-    public static void mostrarOpciones(){
+    public static void mostrarOpciones() {
         System.out.println("Tipos de codigo de barras disponibles");
         for (TipoCodigoBarras tipo : values()) {
             System.out.println(tipo.id + ". " + tipo.nombre);
         }
     }
-    
-    
+
 }

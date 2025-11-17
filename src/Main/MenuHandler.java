@@ -17,15 +17,15 @@ import java.util.Scanner;
  * @author Fernando
  */
 public class MenuHandler {
-     /**
-       Scanner compartido para leer entrada del usuario.
-       Inyectado desde AppMenu para evitar m�ltiples Scanners de System.in.
+
+    /**
+     * Scanner compartido para leer entrada del usuario. Inyectado desde AppMenu
+     * para evitar m�ltiples Scanners de System.in.
      */
     private final Scanner scanner;
-    
+
     private final ProductoServiceImp productoService;
-    
-    
+
     public MenuHandler(Scanner scanner, ProductoServiceImp productoService) {
         if (scanner == null) {
             throw new IllegalArgumentException("Scanner no puede ser null");
@@ -36,9 +36,8 @@ public class MenuHandler {
         this.scanner = scanner;
         this.productoService = productoService;
     }
-    
-    
-     public void crearProducto() {
+
+    public void crearProducto() {
         try {
             System.out.print("Nombre: ");
             String nombre = scanner.nextLine().trim();
@@ -50,57 +49,53 @@ public class MenuHandler {
             System.out.print("Precio: ");
             double precio = Double.parseDouble(scanner.nextLine().trim());
             if (precio <= 0) {
-               throw new IllegalArgumentException("El precio debe ser mayor a 0.");
+                throw new IllegalArgumentException("El precio debe ser mayor a 0.");
             }
 
             // Validar el peso
             System.out.print("Peso: ");
             double peso = Double.parseDouble(scanner.nextLine().trim());
             if (peso <= 0) {
-              throw new IllegalArgumentException("El peso debe ser mayor a 0.");
+                throw new IllegalArgumentException("El peso debe ser mayor a 0.");
             }
 
             // Validar el ID de la categoría
             Categoria.mostrarOpciones();
-            System.out.print("Id Categoria: ");    
+            System.out.print("Id Categoria: ");
             int idCategoria = Integer.parseInt(scanner.nextLine().trim());
             Categoria.buscarPorId(idCategoria);
-            
-           
+
             // Validar el ID de la marca
             Marca.mostrarOpciones();
             System.out.print("Id Marca: ");
             int idMarca = Integer.parseInt(scanner.nextLine().trim());
             Marca.buscarPorId(idMarca);
-           
 
             CodigoBarras codigoBarras = crearCodigoBarras();
-            
+
             Producto producto = new Producto(nombre, precio, peso, idCategoria, idMarca, codigoBarras); // aca usamos el getid de cogiobarras porque no lo recibimos a mano, es algo que nos da sql en este caso
 //            Producto producto = new Producto();// aca usamos contructor vacio para no tener que mandar el id_codigo que todavia no tenemos. DEspues lo construimos abajo mediante gets. 
-            productoService.crearProductoConCodigo(producto,codigoBarras);
+            productoService.crearProductoConCodigo(producto, codigoBarras);
             System.out.println("Producto creado exitosamente con ID: " + producto.getId());
         } catch (Exception e) {
             System.err.println("Error al crear producto: " + e.getMessage());
         }
     }
 
-     
-     
-
-      public void listarProductos() {
+    public void listarProductos() {
         try {
 
             List<Producto> productos;
             productos = productoService.getAll();
-           
+
             if (productos.isEmpty()) {
                 System.out.println("No se encontraron productos.");
-                
-            }else{
-            
+
+            } else {
+
                 for (Producto p : productos) {
-                    System.out.println(p + " " + p.getCodigoBarras());
+                    System.out.println(p);
+                    System.out.println("====================");
                 }
 
             }
@@ -108,14 +103,10 @@ public class MenuHandler {
             System.err.println("Error al listar productos: " + e.getMessage());
         }
     }
-     
-            
-       
-       /*
-      Permite actualizar el precio del producto
-      */
 
-      
+    /*
+      Permite actualizar el precio del producto
+     */
     public void actualizarProducto() {
         try {
             System.out.print("ID del producto a actualizar: ");
@@ -127,27 +118,25 @@ public class MenuHandler {
                 return;
             }
 
-            System.out.print("Nuevo precio (actual: " + p.getPrecio()+ ", Enter para mantener): ");
+            System.out.print("Nuevo precio (actual: " + p.getPrecio() + ", Enter para mantener): ");
             String inputPrecio = scanner.nextLine().trim();
             if (!inputPrecio.isEmpty()) {
-                try{
+                try {
                     double precio = Double.parseDouble(inputPrecio);
-                    p.setPrecio(precio);        
-                }catch(NumberFormatException  e){
+                    p.setPrecio(precio);
+                } catch (NumberFormatException e) {
                     System.out.println("El precio ingresado no es valido");
                 }
             }
-            
+
             productoService.actualizar(p);
             System.out.println("Producto actualizada exitosamente.");
         } catch (Exception e) {
             System.err.println("Error al actualizar producto: " + e.getMessage());
         }
     }
-    
-    
-     
-        public void eliminarProducto() {
+
+    public void eliminarProducto() {
         try {
             System.out.print("ID del producto a eliminar: ");
             int id = Integer.parseInt(scanner.nextLine());
@@ -157,96 +146,81 @@ public class MenuHandler {
             System.err.println("Error al eliminar persona: " + e.getMessage());
         }
     }
-        
-        
-        public void buscarPorNombre(){
-            List<Producto> productos;
+
+    public void buscarPorNombre() {
+        List<Producto> productos;
+        try {
+            System.out.print("Ingrese texto a buscar: ");
+            String nombre = scanner.nextLine().trim();
+            productos = productoService.buscarPorNombre(nombre);
+
+            if (!productos.isEmpty()) {
+                for (Producto p : productos) {
+                    System.out.println(p);
+                    System.out.println("====================");
+                }
+            } else {
+                System.out.println("No se encontraron productos con ese nombre.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error de base de datos al buscar productos." + e.getMessage());
+        } catch (Exception ex) {
+            System.out.println("Error al realizar la búsqueda" + ex.getMessage());
+        }
+
+    }
+
+    public CodigoBarras crearCodigoBarras() {
+        try {
+            // Solicitar el valor del código de barras
+            System.out.print("Valor del codigo de barras(minimo 8 digitos): ");
+            String valor = scanner.nextLine().trim();
+
+            if (valor.isEmpty()) {
+                throw new IllegalArgumentException("El valor del codigo de barras no puede estar vacio.");
+            }
+
+            // Solicitar el tipo de código de barra 
+            TipoCodigoBarras.mostrarOpciones();
+            System.out.print("Seleccionar tipo: ");
+            int tipoId = Integer.parseInt(scanner.nextLine().trim());
+            // Validar el rango entre 1 y 3
+            TipoCodigoBarras.buscarPorId(tipoId);
+
+            // Crear el objeto CodigoBarras
+            CodigoBarras codigoBarras = new CodigoBarras(valor, tipoId);
+
+            return codigoBarras;
+
+        } catch (Exception e) {
+            System.err.println("Error al crear el codigo de barras: " + e.getMessage());
+            return null;  // En caso de error, retorna null 
+        }
+    }
+
+
+    
+    public void buscarPorId(){
             try{
-                System.out.print("Ingrese texto a buscar: ");
-                String nombre = scanner.nextLine().trim();
-                productos = productoService.buscarPorNombre(nombre);
+                System.out.print("Ingrese id del producto a buscar: ");
+                int id = Integer.parseInt(scanner.nextLine().trim());
+                Producto producto = productoService.getById(id);
                 
-                if (!productos.isEmpty()) {
-                    for (Producto p : productos) {
-                        System.out.println(p);
-                    }
+                if (producto != null){
+                    System.out.println("====================");
+                    System.out.println(producto);
+                    System.out.println("====================");
+                    
                 }else{
-                    System.out.println("No se encontraron productos con ese nombre.");
+                    System.out.println("No se encontro el producto con id " + id);
                 }
             }catch(SQLException e) {
                 System.out.println("Error de base de datos al buscar productos." + e.getMessage());
             }catch(Exception ex){
-                System.out.println("Error al realizar la búsqueda" + ex.getMessage());
+                System.out.println("Error al realizar la busqueda" + ex.getMessage());
             }
             
-        }
-        
-        
-        public CodigoBarras crearCodigoBarras(){
-             try{
-                // Solicitar el valor del código de barras
-                System.out.print("Valor del codigo de barras(minimo 8 digitos): ");
-                String valor = scanner.nextLine().trim();
+         
+     }
 
-                if (valor.isEmpty()) {
-                    throw new IllegalArgumentException("El valor del codigo de barras no puede estar vacio.");
-                }
-
-                 // Solicitar el tipo de código de barra 
-                 TipoCodigoBarras.mostrarOpciones();
-                 System.out.print("Seleccionar tipo: ");
-                 int tipoId = Integer.parseInt(scanner.nextLine().trim());
-                // Validar el rango entre 1 y 3
-                TipoCodigoBarras.buscarPorId(tipoId);
-                
-                
-                // Crear el objeto CodigoBarras
-                CodigoBarras codigoBarras = new CodigoBarras(valor, tipoId);
-                          
-                return codigoBarras;
-        
-            }catch (Exception e) {
-                System.err.println("Error al crear el codigo de barras: " + e.getMessage());
-                return null;  // En caso de error, retorna null 
-            }
-        }
-        
-    /*
-    Actualiza las observacioes del CodigoBarra    
-        
-    public void actualizarCodigoBarra() {
-        try {
-            System.out.print("ID del codigo de barra a actualizar: ");
-            int id = Integer.parseInt(scanner.nextLine().trim());
-            CodigoBarras cb = productoService.getCodigoBarras().getById(id);
-
-            if (cb == null) {
-                System.out.println("Codigo de barras no encontrado.");
-                return;
-            }
-
-            System.out.print("Nuevas observaciones(actual: " + cb.getObservaciones()+ ", Enter para mantener): ");
-            String observaciones = scanner.nextLine().trim();
-            if (!observaciones.isEmpty()) {
-                cb.setObservaciones(observaciones);
-            }
-            
-            productoService.getCodigoBarras().actualizar(cb);
-            System.out.println("Codigo de barras actualizado exitosamente.");
-        } catch (Exception e) {
-            System.err.println("Error al actualizar el codigo de barras: " + e.getMessage());
-        }
-    }*/
-     
- 
-           
-    
-    
-    
 }
-
-
-
-
-
-
